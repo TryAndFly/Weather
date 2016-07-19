@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.weather.db.WeatherOpenHelper;
 
@@ -53,6 +54,7 @@ public class WeatherDB {
             ContentValues contentValues = new ContentValues();
             contentValues.put("province_name",province.getProvinceName());
             contentValues.put("province_code",province.getProvinceCode());
+            Log.d("saveProvince","正要添加到表中的数据"+province.getProvinceName());
             sqLiteDatabase.insert("Province",null,contentValues);
         }
     }
@@ -62,9 +64,9 @@ public class WeatherDB {
     public List<Province> loadProvince(){
         List<Province> list = new ArrayList<Province>();
         Cursor cursor = sqLiteDatabase.query("Province",null,null,null,null,null,null);
-        Province province = new Province();
         if (cursor.moveToFirst()){
             do {
+                Province province = new Province();//如果放在外面进行声明，此处数据显示会产生错误
                 province.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 province.setProvinceName(cursor.getString(cursor.getColumnIndex("province_name")));
                 province.setProvinceCode(cursor.getString(cursor.getColumnIndex("province_code")));
@@ -91,16 +93,17 @@ public class WeatherDB {
     /**
      * 从数据库读取全国所有城市信息
      */
-    public List<City> loadCity(){
+    public List<City> loadCity(int province_id){
         List<City> list = new ArrayList<City>();
         Cursor cursor = sqLiteDatabase.query("City",null,null,null,null,null,null);
-        City city = new City();
+
         if (cursor.moveToFirst()){
             do {
+                City city = new City();
                 city.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 city.setCityName(cursor.getString(cursor.getColumnIndex("city_name")));
                 city.setCityCode(cursor.getString(cursor.getColumnIndex("city_code")));
-                city.setProvinceId(cursor.getInt(cursor.getColumnIndex("province_id")));
+                city.setProvinceId(province_id);
                 list.add(city);
             }while (cursor.moveToNext());
         }
@@ -126,16 +129,17 @@ public class WeatherDB {
     /**
      * 从数据库读取全国所有城市信息
      */
-    public List<Country> loadCountry(){
+    public List<Country> loadCountry(int city_id){
         List<Country> list = new ArrayList<Country>();
         Cursor cursor = sqLiteDatabase.query("Country",null,null,null,null,null,null);
-        Country country = new Country();
+
         if (cursor.moveToFirst()){
             do {
+                Country country = new Country();
                 country.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 country.setCountryName(cursor.getString(cursor.getColumnIndex("country_name")));
                 country.setCountryCode(cursor.getString(cursor.getColumnIndex("country_code")));
-                country.setCityId(cursor.getInt(cursor.getColumnIndex("city_id")));
+                country.setCityId(city_id);
                 list.add(country);
             }while (cursor.moveToNext());
         }
