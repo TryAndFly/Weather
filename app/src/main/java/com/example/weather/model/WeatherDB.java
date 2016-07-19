@@ -95,7 +95,7 @@ public class WeatherDB {
      */
     public List<City> loadCity(int province_id){
         List<City> list = new ArrayList<City>();
-        Cursor cursor = sqLiteDatabase.query("City",null,null,null,null,null,null);
+        Cursor cursor = sqLiteDatabase.query("City",null,"province_id = ?",new String[]{String.valueOf(province_id)},null,null,null);
 
         if (cursor.moveToFirst()){
             do {
@@ -131,7 +131,7 @@ public class WeatherDB {
      */
     public List<Country> loadCountry(int city_id){
         List<Country> list = new ArrayList<Country>();
-        Cursor cursor = sqLiteDatabase.query("Country",null,null,null,null,null,null);
+        Cursor cursor = sqLiteDatabase.query("Country",null,"city_id = ?",new String[]{String.valueOf(city_id)},null,null,null);
 
         if (cursor.moveToFirst()){
             do {
